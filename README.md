@@ -9,7 +9,8 @@ Automatically hear natural voice summaries of completed tasks using ElevenLabs' 
 
 - **Smart Summarization**: Intelligently extracts key actions from Claude's responses
 - **Session Detection**: Automatically detects and announces which terminal session completed the task
-- **Natural Voice**: High-quality voice synthesis for pleasant listening
+- **Voice Mapping**: Each Terminal Keeper session gets its own unique voice for instant identification
+- **Natural Voice**: High-quality voice synthesis with 9 different voice options
 - **Cross-Platform**: Works on macOS, Windows, and Linux/WSL
 - **Audio Archive**: Saves all generated summaries for later playback
 
@@ -126,9 +127,21 @@ export CLAUDE_SESSION_NAME="My Custom Session"
 
 ### Example Output
 Instead of: *"Created test file successfully"*
-You'll hear: *"Session SageDev 2: Created test file successfully"*
+You'll hear: *"Session SageDev 2: Created test file successfully"* (in Rachel's professional voice)
 
-This helps you track which of your multiple Claude instances completed the task!
+### 🎭 Voice Mapping
+Each session gets its own unique voice:
+- **SageDev 1**: Your custom voice
+- **SageDev 2**: Rachel (professional newsreader)
+- **WSL SageDev**: George (calm narrator)
+- **TypeScript**: Daniel (British accent)
+- **Frontend**: Adam (friendly)
+- **Backend**: Antoni (well-rounded)
+- **Testing**: Grace (soft-spoken)
+
+See [Voice Mapping Guide](docs/VOICE_MAPPING.md) for complete details.
+
+This helps you instantly identify which Claude instance completed the task just by the voice!
 
 ## 💰 Pricing & Usage
 

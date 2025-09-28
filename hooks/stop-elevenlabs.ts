@@ -28,6 +28,21 @@ interface StopPayload {
   taskSummary?: string;
 }
 
+interface TerminalSession {
+  name: string;
+  icon?: string;
+  cwd: string;
+  shell?: string;
+  commands?: string[];
+}
+
+interface SessionsConfig {
+  active: string;
+  sessions: {
+    [key: string]: TerminalSession[];
+  };
+}
+
 interface HistoryEntry {
   id: string;
   timestamp: string;
@@ -41,9 +56,22 @@ interface HistoryEntry {
 
 // Configuration
 const CONFIG = {
-  // ElevenLabs voice ID - Rachel (conversational female voice)
-  // You can find more voices at https://elevenlabs.io/voice-library
-  voiceId: 'EXAVITQu4vr4xnSDxMaL',
+  // Session-specific voice mapping for Terminal Keeper sessions
+  // Each session gets a unique, consistent voice for easy audio identification
+  sessionVoices: {
+    'SageDev 1': 'yOsUZuYik0dKCynjfgaE',      // Your custom voice (Session 1)
+    'SageDev 2': 'EXAVITQu4vr4xnSDxMaL',      // Rachel - Professional newsreader (female)
+    'WSL SageDev': 'JBFqnCBsd6RMkjVDRZzb',    // George - Calm narrator (male)
+    'WSL SageDev 2': 'MF3mGyEYCl7XYWbV9V6O',  // Emily - Bubbly teenager (female)
+    'WSL SageDev 3': 'TxGEqnHWrfWFTfGW9XjX',  // Josh - Energetic young adult (male)
+    'TypeScript': 'onwK4e9ZLuTAKqWW03F9',      // Daniel - British accent (male)
+    'Frontend': 'pNInz6obpgDQGcFmaJgB',        // Adam - Friendly guy next door (male)
+    'Backend': 'ErXwobaYiN019PkySvjV',         // Antoni - Well-rounded (male)
+    'Testing': 'oWAxZDx7w5VEj9dCyTzz',        // Grace - Soft spoken (female)
+  },
+
+  // Default fallback voice ID if session not found in mapping
+  defaultVoiceId: 'yOsUZuYik0dKCynjfgaE',
 
   // Voice settings for natural speech
   voiceSettings: {
@@ -69,6 +97,104 @@ process.stdin.on('readable', () => {
     input += chunk;
   }
 });
+
+// Function to detect current terminal session
+function detectTerminalSession(): string {
+  try {
+    // Check if session is manually specified via environment variable
+    const manualSession = process.env.CLAUDE_SESSION_NAME;
+    if (manualSession) {
+      console.log(`🖥️ Session specified via CLAUDE_SESSION_NAME: ${manualSession}`);
+      return manualSession;
+    }
+
+    // Look for sessions.json in .vscode directory
+    const sessionsPath = join(process.cwd(), '.vscode', 'sessions.json');
+
+    if (!existsSync(sessionsPath)) {
+      console.log('ℹ️ No .vscode/sessions.json found, skipping session detection');
+      return '';
+    }
+
+    const sessionsConfig: SessionsConfig = JSON.parse(readFileSync(sessionsPath, 'utf8'));
+    const currentCwd = process.cwd();
+
+    // Get the active session group
+    const activeSessionGroup = sessionsConfig.sessions[sessionsConfig.active] || [];
+
+    // Try multiple methods to detect the session
+    let matchedSession = '';
+
+    // Method 1: Try to match by exact CWD
+    const exactMatch = activeSessionGroup.find(session => session.cwd === currentCwd);
+    if (exactMatch) {
+      matchedSession = exactMatch.name;
+      console.log(`🖥️ Session detected by CWD match: ${matchedSession}`);
+      return matchedSession;
+    }
+
+    // Method 2: Smart fallback - if all sessions have same CWD, try to differentiate
+    const cwdMatches = activeSessionGroup.filter(session => session.cwd === currentCwd);
+
+    if (cwdMatches.length > 1) {
+      // Multiple sessions with same CWD - try to use a round-robin or time-based selection
+      const sessionIndex = Math.floor(Date.now() / 30000) % cwdMatches.length; // Changes every 30 seconds
+      matchedSession = cwdMatches[sessionIndex].name;
+      console.log(`🖥️ Session detected by time-based selection: ${matchedSession} (${sessionIndex + 1}/${cwdMatches.length})`);
+    } else if (cwdMatches.length === 1) {
+      matchedSession = cwdMatches[0].name;
+      console.log(`🖥️ Session detected by unique CWD match: ${matchedSession}`);
+    } else {
+      // Try partial CWD matching
+      const partialMatch = activeSessionGroup.find(session =>
+        session.cwd && (
+          currentCwd.startsWith(session.cwd) ||
+          session.cwd.startsWith(currentCwd)
+        )
+      );
+
+      if (partialMatch) {
+        matchedSession = partialMatch.name;
+        console.log(`🖥️ Session detected by partial CWD match: ${matchedSession}`);
+      }
+    }
+
+    // Fallback: Use first session if no specific match found
+    if (!matchedSession && activeSessionGroup.length > 0) {
+      matchedSession = activeSessionGroup[0].name;
+      console.log(`🖥️ Session detected by fallback (first session): ${matchedSession}`);
+    }
+
+    if (matchedSession) {
+      return matchedSession;
+    } else {
+      console.log('ℹ️ Could not match current terminal to any defined session');
+      return '';
+    }
+
+  } catch (error) {
+    console.log('⚠️ Error detecting terminal session:', error);
+    return '';
+  }
+}
+
+// Function to get voice ID for a specific session
+function getVoiceForSession(sessionName: string): string {
+  if (!sessionName) {
+    console.log(`🎭 Using default voice (no session detected)`);
+    return CONFIG.defaultVoiceId;
+  }
+
+  const voiceId = CONFIG.sessionVoices[sessionName] || CONFIG.defaultVoiceId;
+
+  if (CONFIG.sessionVoices[sessionName]) {
+    console.log(`🎭 Using session-specific voice for "${sessionName}"`);
+  } else {
+    console.log(`🎭 Session "${sessionName}" not in voice mapping, using default voice`);
+  }
+
+  return voiceId;
+}
 
 // Function to generate a concise summary from Claude's response
 function generateSummary(response: string): string {
@@ -188,7 +314,7 @@ function generateSummary(response: string): string {
 }
 
 // Function to call ElevenLabs API directly
-async function generateSpeechWithElevenLabs(text: string, outputPath: string): Promise<boolean> {
+async function generateSpeechWithElevenLabs(text: string, outputPath: string, voiceId: string): Promise<boolean> {
   const apiKey = process.env.ELEVENLABS_API_KEY;
 
   if (!apiKey) {
@@ -198,7 +324,8 @@ async function generateSpeechWithElevenLabs(text: string, outputPath: string): P
   }
 
   try {
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${CONFIG.voiceId}`, {
+    console.log(`🎤 Generating speech with voice ID: ${voiceId}`);
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
       method: 'POST',
       headers: {
         'xi-api-key': apiKey,
@@ -295,8 +422,16 @@ process.stdin.on('end', async () => {
   try {
     const data: StopPayload = input ? JSON.parse(input) : {};
 
+    // Detect current terminal session
+    const sessionName = detectTerminalSession();
+
     // Generate summary from Claude's response
-    const summary = data.taskSummary || generateSummary(data.response || '');
+    const baseSummary = data.taskSummary || generateSummary(data.response || '');
+
+    // Prepend session name if detected
+    const summary = sessionName
+      ? `Session ${sessionName}: ${baseSummary}`
+      : baseSummary;
 
     console.log(`📝 Task Summary: ${summary}`);
 
@@ -306,12 +441,15 @@ process.stdin.on('end', async () => {
       mkdirSync(audioDir, { recursive: true });
     }
 
+    // Get the appropriate voice for this session
+    const voiceId = getVoiceForSession(sessionName);
+
     // Generate unique filename for this audio
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const audioPath = join(audioDir, `summary-${timestamp}.mp3`);
 
-    // Generate speech using ElevenLabs
-    const speechGenerated = await generateSpeechWithElevenLabs(summary, audioPath);
+    // Generate speech using ElevenLabs with session-specific voice
+    const speechGenerated = await generateSpeechWithElevenLabs(summary, audioPath, voiceId);
 
     if (speechGenerated && existsSync(audioPath)) {
       // Update history with audio information
