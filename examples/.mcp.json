@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "elevenlabs": {
+      "command": "npx",
+      "args": ["@microagents/mcp-server-elevenlabs"],
+      "env": {
+        "ELEVENLABS_API_KEY": "${ELEVENLABS_API_KEY}",
+        "ELEVENLABS_MCP_BASE_PATH": "/path/to/your/project/.claude/audio"
+      }
+    }
+  }
+}
