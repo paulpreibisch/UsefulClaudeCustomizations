@@ -79,16 +79,51 @@ Create or update `~/.claude/settings.json`:
 
 ### Change Voice
 
-Edit the `voiceId` in the hook file. Popular voices:
+Edit the `voiceId` in the hook file. You can use either the default professional voices or video game character voices:
 
+#### Professional Voices (Original)
 ```typescript
 const CONFIG = {
-  voiceId: 'EXAVITQu4vr4xnSDxMaL', // Rachel (default)
-  // voiceId: 'MF3mGyEYCl7XYWbV9V6O', // Emily
-  // voiceId: 'TxGEqnHWrfWFTfGW9XjX', // Josh (male)
+  voiceId: 'EXAVITQu4vr4xnSDxMaL', // Rachel - Professional newsreader (default)
+  // voiceId: 'MF3mGyEYCl7XYWbV9V6O', // Emily - Bubbly teenager
+  // voiceId: 'TxGEqnHWrfWFTfGW9XjX', // Josh - Energetic young adult (male)
+  // voiceId: 'JBFqnCBsd6RMkjVDRZzb', // George - Calm narrator (male)
+  // voiceId: 'onwK4e9ZLuTAKqWW03F9', // Daniel - British accent (male)
+  // voiceId: 'pNInz6obpgDQGcFmaJgB', // Adam - Friendly guy next door (male)
+  // voiceId: 'ErXwobaYiN019PkySvjV', // Antoni - Well-rounded (male)
+  // voiceId: 'oWAxZDx7w5VEj9dCyTzz', // Grace - Soft spoken (female)
   // voiceId: 'flq6f7yk4E4fJM5XTYuZ', // Michael (male)
 };
 ```
+
+#### Video Game Character Voices
+Access the full collection at: https://elevenlabs.io/app/voice-library/collections/HXn5AetPOJgAHd2D60mP
+
+To get any voice ID from this collection:
+1. Visit the collection link above
+2. Click the three dots (...) menu on any voice
+3. Select "Copy voice ID"
+4. Use it in your configuration
+
+Available characters include:
+- **Drill Sergeant** - Commanding military voice
+- **Demon Monster** - Deep horror/fantasy voice
+- **Flicker** - Cheerful fairy voice
+- **Cowboy Bob VF** - Old West storyteller
+- **Jessica Anne Bogart** - Villain voice (wickedly eloquent)
+- **Lutz Laugh** - Cheerful and giggly
+- **Emma** - Adorable animation voice
+- **Dr. Von Fusion VF** - Quirky mad scientist
+- **Matthew Schmitz** - Arrogant tyrant
+- **Mordred** - Evil villain (German)
+- **Myrddin** - Wizard/narrator (800+ year old wizard)
+- **Cocky Male Villain** - Theatrical antagonist
+- **Marshal** - German professor
+- **John Morgan** - Southern cowboy
+- **Parasyte** - Gollum-like creature
+- **Aria** - Sexy female villain
+- **Bjorn The Viking** - Nordic warrior
+- **Pirate Marshal** - Sea dog with Cornwall accent
 
 Browse more voices at [ElevenLabs Voice Library](https://elevenlabs.io/voice-library).
 
@@ -130,14 +165,17 @@ Instead of: *"Created test file successfully"*
 You'll hear: *"Session SageDev 2: Created test file successfully"* (in Rachel's professional voice)
 
 ### 🎭 Voice Mapping
-Each session gets its own unique voice:
-- **SageDev 1**: Your custom voice
-- **SageDev 2**: Rachel (professional newsreader)
-- **WSL SageDev**: George (calm narrator)
-- **TypeScript**: Daniel (British accent)
-- **Frontend**: Adam (friendly)
-- **Backend**: Antoni (well-rounded)
-- **Testing**: Grace (soft-spoken)
+Each session can be mapped to its own unique voice. Here's the recommended professional voice mapping:
+
+- **SageDev 1**: `yOsUZuYik0dKCynjfgaE` - Your custom voice
+- **SageDev 2**: `EXAVITQu4vr4xnSDxMaL` - Rachel (professional newsreader)
+- **WSL SageDev**: `JBFqnCBsd6RMkjVDRZzb` - George (calm narrator)
+- **WSL SageDev 2**: `MF3mGyEYCl7XYWbV9V6O` - Emily (bubbly teenager)
+- **WSL SageDev 3**: `TxGEqnHWrfWFTfGW9XjX` - Josh (energetic young adult)
+- **TypeScript**: `onwK4e9ZLuTAKqWW03F9` - Daniel (British accent)
+- **Frontend**: `pNInz6obpgDQGcFmaJgB` - Adam (friendly guy next door)
+- **Backend**: `ErXwobaYiN019PkySvjV` - Antoni (well-rounded)
+- **Testing**: `oWAxZDx7w5VEj9dCyTzz` - Grace (soft-spoken)
 
 See [Voice Mapping Guide](docs/VOICE_MAPPING.md) for complete details.
 
