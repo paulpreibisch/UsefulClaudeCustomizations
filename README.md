@@ -8,6 +8,7 @@ A collection of powerful hooks and customizations for [Claude Code](https://clau
 Automatically hear natural voice summaries of completed tasks using ElevenLabs' text-to-speech API.
 
 - **Smart Summarization**: Intelligently extracts key actions from Claude's responses
+- **Session Detection**: Automatically detects and announces which terminal session completed the task
 - **Natural Voice**: High-quality voice synthesis for pleasant listening
 - **Cross-Platform**: Works on macOS, Windows, and Linux/WSL
 - **Audio Archive**: Saves all generated summaries for later playback
@@ -106,6 +107,28 @@ voiceSettings: {
 ```typescript
 maxSummaryLength: 150  // Adjust character limit
 ```
+
+## 🖥️ Terminal Session Detection
+
+The hook automatically detects which terminal session is completing tasks, perfect for multi-session workflows:
+
+### Automatic Detection
+- **VS Code Terminal Keeper**: Reads `.vscode/sessions.json` to identify the current session
+- **Multiple Methods**: Uses CWD matching, environment variables, and smart fallbacks
+- **Session Announcements**: Voice says "Session [Name]: [Summary]"
+
+### Manual Session Override
+Set the session name manually:
+
+```bash
+export CLAUDE_SESSION_NAME="My Custom Session"
+```
+
+### Example Output
+Instead of: *"Created test file successfully"*
+You'll hear: *"Session SageDev 2: Created test file successfully"*
+
+This helps you track which of your multiple Claude instances completed the task!
 
 ## 💰 Pricing & Usage
 
