@@ -29,13 +29,13 @@ Here are the voice IDs already configured in the scripts:
 
 | Voice Name | Voice ID | Description |
 |------------|----------|-------------|
+| **Tiffany** | `flHkNRp1BlvT73UL6gyz` | Soft female Voice |
 | **Cowboy** | `KTPVrSVAEUSJRClDzBw7` | Deep, authoritative male |
-| **GentleGirl** | `TC0Zp7WVFzhA8zpTlRqV` | Soft, friendly female |
+| **JoAnne** | `TC0Zp7WVFzhA8zpTlRqV` | Soft, friendly female |
 | **Alex** | `zYcjlYFOd3taleS0gkk3` | Professional male |
 | **Sarah** | `ruirxsoakN0GWmGNIo04` | Clear female |
 | **Marcus** | `DGzg6RaUqxGRTHSBjfgF` | Warm male |
 | **Deep Male** | `vfaqCOvlrKi4Zp7C2IAm` | Very deep male |
-| **Sophia** | `flHkNRp1BlvT73UL6gyz` | Pleasant female |
 | **David** | `9yzdeviXkFddZ4Oz8Mok` | Standard male |
 | **Isabella** | `yjJ45q8TVCrtMhEKurxY` | Elegant female |
 | **Michael** | `0SpgpJ4D3MpHCiWdyTg3` | Neutral male |
