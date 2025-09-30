@@ -133,7 +133,7 @@ Voice Switch Cowboy      # Change to Cowboy voice
 ### Available Voices
 
 - **Cowboy** (default) - Deep, authoritative male
-- **GentleGirl** - Soft, friendly female
+- **Joanne** - Soft, friendly female
 - **Alex** - Professional male
 - **Sarah** - Clear female
 - **Marcus** - Warm male

@@ -162,16 +162,16 @@ export CLAUDE_SESSION_NAME="My Custom Session"
 
 ### Example Output
 Instead of: *"Created test file successfully"*
-You'll hear: *"Session SageDev 2: Created test file successfully"* (in Rachel's professional voice)
+You'll hear: *"Session MyProject: Created test file successfully"* (in Rachel's professional voice)
 
 ### 🎭 Voice Mapping
 Each session can be mapped to its own unique voice. Here's the recommended professional voice mapping:
 
-- **SageDev 1**: `yOsUZuYik0dKCynjfgaE` - Your custom voice
-- **SageDev 2**: `EXAVITQu4vr4xnSDxMaL` - Rachel (professional newsreader)
-- **WSL SageDev**: `JBFqnCBsd6RMkjVDRZzb` - George (calm narrator)
-- **WSL SageDev 2**: `MF3mGyEYCl7XYWbV9V6O` - Emily (bubbly teenager)
-- **WSL SageDev 3**: `TxGEqnHWrfWFTfGW9XjX` - Josh (energetic young adult)
+- **Session 1**: `yOsUZuYik0dKCynjfgaE` - Your custom voice
+- **Session 2**: `EXAVITQu4vr4xnSDxMaL` - Rachel (professional newsreader)
+- **Session 3**: `JBFqnCBsd6RMkjVDRZzb` - George (calm narrator)
+- **Session 4**: `MF3mGyEYCl7XYWbV9V6O` - Emily (bubbly teenager)
+- **Session 5**: `TxGEqnHWrfWFTfGW9XjX` - Josh (energetic young adult)
 - **TypeScript**: `onwK4e9ZLuTAKqWW03F9` - Daniel (British accent)
 - **Frontend**: `pNInz6obpgDQGcFmaJgB` - Adam (friendly guy next door)
 - **Backend**: `ErXwobaYiN019PkySvjV` - Antoni (well-rounded)

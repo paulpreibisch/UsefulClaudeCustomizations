@@ -59,11 +59,11 @@ const CONFIG = {
   // Session-specific voice mapping for Terminal Keeper sessions
   // Each session gets a unique, consistent voice for easy audio identification
   sessionVoices: {
-    'SageDev 1': 'yOsUZuYik0dKCynjfgaE',      // Your custom voice (Session 1)
-    'SageDev 2': 'EXAVITQu4vr4xnSDxMaL',      // Rachel - Professional newsreader (female)
-    'WSL SageDev': 'JBFqnCBsd6RMkjVDRZzb',    // George - Calm narrator (male)
-    'WSL SageDev 2': 'MF3mGyEYCl7XYWbV9V6O',  // Emily - Bubbly teenager (female)
-    'WSL SageDev 3': 'TxGEqnHWrfWFTfGW9XjX',  // Josh - Energetic young adult (male)
+    'Session 1': 'yOsUZuYik0dKCynjfgaE',      // Your custom voice (Session 1)
+    'Session 2': 'EXAVITQu4vr4xnSDxMaL',      // Rachel - Professional newsreader (female)
+    'Session 3': 'JBFqnCBsd6RMkjVDRZzb',      // George - Calm narrator (male)
+    'Session 4': 'MF3mGyEYCl7XYWbV9V6O',      // Emily - Bubbly teenager (female)
+    'Session 5': 'TxGEqnHWrfWFTfGW9XjX',      // Josh - Energetic young adult (male)
     'TypeScript': 'onwK4e9ZLuTAKqWW03F9',      // Daniel - British accent (male)
     'Frontend': 'pNInz6obpgDQGcFmaJgB',        // Adam - Friendly guy next door (male)
     'Backend': 'ErXwobaYiN019PkySvjV',         // Antoni - Well-rounded (male)

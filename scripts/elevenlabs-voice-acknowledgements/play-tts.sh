@@ -25,7 +25,7 @@ CURRENT_VOICE=$(cat "$VOICE_FILE" 2>/dev/null || echo "Cowboy")
 # Voice IDs mapping (must match voice-manager.sh)
 declare -A VOICES=(
   ["Cowboy"]="KTPVrSVAEUSJRClDzBw7"
-  ["GentleGirl"]="TC0Zp7WVFzhA8zpTlRqV"
+  ["Joanne"]="TC0Zp7WVFzhA8zpTlRqV"
   ["Alex"]="zYcjlYFOd3taleS0gkk3"
   ["Sarah"]="ruirxsoakN0GWmGNIo04"
   ["Marcus"]="DGzg6RaUqxGRTHSBjfgF"

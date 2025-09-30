@@ -25,8 +25,7 @@ process.stdin.on('end', async () => {
     const possiblePaths = [
       join(process.cwd(), 'sounds-local', 'production-crow.wav'),
       join(process.cwd(), '.claude', 'sounds', 'production-crow.wav'),
-      join(process.env.HOME, '.claude', 'sounds', 'production-crow.wav'),
-      '/home/fire/claude/SoraSage/teams/team-10/dev__globify__production/sounds-local/production-crow.wav'
+      join(process.env.HOME, '.claude', 'sounds', 'production-crow.wav')
     ];
 
     let soundFile = null;

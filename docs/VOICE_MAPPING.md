@@ -99,7 +99,7 @@ declare -A VOICES=(
 - Warm tone
 - Conversational style
 - Approachable feeling
-- Examples: GentleGirl, Sophia, Marcus
+- Examples: Joanne, Sophia, Marcus
 
 ### Authoritative/Serious
 - Deep voice
