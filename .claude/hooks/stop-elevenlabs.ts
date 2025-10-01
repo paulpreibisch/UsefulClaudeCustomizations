@@ -113,6 +113,15 @@ const CONFIG = {
 // Read input from stdin
 let input = '';
 process.stdin.setEncoding('utf8');
+
+// DEBUG: Log that hook started
+const startLog = join(process.cwd(), '.claude', 'hook-started.log');
+try {
+  writeFileSync(startLog, `Hook started at ${new Date().toISOString()}\n`);
+} catch (e) {
+  // Ignore
+}
+
 process.stdin.on('readable', () => {
   let chunk;
   while ((chunk = process.stdin.read()) !== null) {
@@ -498,10 +507,57 @@ function updateHistory(audioPath: string, summary: string) {
 
 process.stdin.on('end', async () => {
   try {
-    const data: StopPayload = input ? JSON.parse(input) : {};
+    const data: any = input ? JSON.parse(input) : {};
+
+    // DEBUG: Log what we receive to a file
+    const debugLog = join(process.cwd(), '.claude', 'debug-hook.log');
+    writeFileSync(debugLog, JSON.stringify(data, null, 2));
+    console.log('🔍 DEBUG: Logged payload to .claude/debug-hook.log');
+
+    // Read the transcript to get the actual response
+    let response = '';
+    if (data.transcript_path && existsSync(data.transcript_path)) {
+      const transcript = readFileSync(data.transcript_path, 'utf8');
+      // Parse JSONL (each line is a JSON object)
+      const lines = transcript.trim().split('\n').filter(l => l.trim());
+
+      // Find the last assistant message by iterating backwards
+      for (let i = lines.length - 1; i >= 0; i--) {
+        try {
+          const entry = JSON.parse(lines[i]);
+          if (entry.type === 'assistant' && entry.message?.content) {
+            const content = entry.message.content;
+
+            // Content can be a string or an array of content blocks
+            if (typeof content === 'string') {
+              response = content;
+            } else if (Array.isArray(content)) {
+              // Extract text from content blocks
+              response = content
+                .filter(block => block.type === 'text')
+                .map(block => block.text)
+                .join('\n');
+            }
+
+            // DEBUG: Log what we extracted
+            const extractedLog = join(process.cwd(), '.claude', 'response-extracted.log');
+            writeFileSync(extractedLog,
+              `Response length: ${response.length}\nFirst 500 chars:\n${response.substring(0, 500)}\n\n` +
+              `Looking for markers...\nACKNOWLEDGE: ${response.includes('ACKNOWLEDGE')}\nTASK_COMPLETE: ${response.includes('TASK_COMPLETE')}`
+            );
+            console.log(`🔍 DEBUG: Extracted response (${response.length} chars), logged to .claude/response-extracted.log`);
+
+            break;
+          }
+        } catch (e) {
+          // Skip invalid lines
+          console.log(`⚠️ Skipping invalid JSON line: ${e}`);
+        }
+      }
+    }
 
     // Check for voice markers first
-    const markerCheck = checkForVoiceMarker(data.response || '');
+    const markerCheck = checkForVoiceMarker(response);
 
     // If no marker found, exit early without TTS
     if (!markerCheck.shouldSpeak) {
