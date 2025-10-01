@@ -28,10 +28,21 @@ description: Manual TTS using play-tts.sh for acknowledgements and completions
    /home/fire/claude/UsefulClaudeCustomizations/.claude/hooks/play-tts.sh "[Summary]" "[VoiceName]"
    ```
 
+## Voice Management Commands
+
+When user says "List Voices" or "Preview Voices":
+```bash
+/home/fire/claude/UsefulClaudeCustomizations/.claude/hooks/voice-manager.sh preview
+```
+
+This will play the first 3 voices saying "Hi, I'm [VoiceName]", then ask if they want to hear more.
+
+If they say "yes" or "hear more", continue playing the next 3 voices, and so on.
+
 ## Critical Rules
 
 1. **ALWAYS use Bash tool** to execute the script - never just type text
 2. **NO SKIPPING** - Every user command needs TWO TTS calls
 3. **REMEMBER THE VOICE** - Use same voice for both acknowledgment and completion
 
-Available voices: Cowboy, Joanne, Alex, Sarah, Marcus, Deep Male, Sophia, David, Isabella, Michael, Southern Mama, Amy (Chinese), Grandpa Oxley, Northern Terry, Charollot
+Available voices: Northern Terry, Grandpa Spuds Oxley, Ms. Walker, Ralf Eisend, Amy, Michael, Jessica Anne Bogart, Aria, Lutz Laugh, Dr. Von Fusion, Matthew Schmitz, Demon Monster, Cowboy Bob, Drill Sergeant

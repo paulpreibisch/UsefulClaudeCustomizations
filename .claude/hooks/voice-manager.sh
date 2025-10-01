@@ -4,23 +4,22 @@
 
 VOICE_FILE="/tmp/claude-tts-voice-${USER}.txt"
 
-# Voice mapping
+# Voice mapping - Official ElevenLabs Character Voices
 declare -A VOICES=(
-  ["Cowboy"]="KTPVrSVAEUSJRClDzBw7"
-  ["Joanne"]="TC0Zp7WVFzhA8zpTlRqV"
-  ["Alex"]="zYcjlYFOd3taleS0gkk3"
-  ["Sarah"]="ruirxsoakN0GWmGNIo04"
-  ["Marcus"]="DGzg6RaUqxGRTHSBjfgF"
-  ["Deep Male"]="vfaqCOvlrKi4Zp7C2IAm"
-  ["Sophia"]="flHkNRp1BlvT73UL6gyz"
-  ["David"]="9yzdeviXkFddZ4Oz8Mok"
-  ["Isabella"]="yjJ45q8TVCrtMhEKurxY"
-  ["Michael"]="0SpgpJ4D3MpHCiWdyTg3"
-  ["Southern Mama"]="DLsHlh26Ugcm6ELvS0qi"
-  ["Amy (Chinese)"]="bhJUNIXWQQ94l8eI2VUf"
-  ["Grandpa Oxley"]="NOpBlnGInO9m6vDvFkFC"
   ["Northern Terry"]="wo6udizrrtpIxWGp2qJk"
-  ["Charollot"]="XB0fDUnXU5powFXDhCwa"
+  ["Grandpa Spuds Oxley"]="NOpBlnGInO9m6vDvFkFC"
+  ["Ms. Walker"]="DLsHlh26Ugcm6ELvS0qi"
+  ["Ralf Eisend"]="A9evEp8yGjv4c3WsIKuY"
+  ["Amy"]="bhJUNIXWQQ94l8eI2VUf"
+  ["Michael"]="U1Vk2oyatMdYs096Ety7"
+  ["Jessica Anne Bogart"]="flHkNRp1BlvT73UL6gyz"
+  ["Aria"]="TC0Zp7WVFzhA8zpTlRqV"
+  ["Lutz Laugh"]="9yzdeviXkFddZ4Oz8Mok"
+  ["Dr. Von Fusion"]="yjJ45q8TVCrtMhEKurxY"
+  ["Matthew Schmitz"]="0SpgpJ4D3MpHCiWdyTg3"
+  ["Demon Monster"]="vfaqCOvlrKi4Zp7C2IAm"
+  ["Cowboy Bob"]="KTPVrSVAEUSJRClDzBw7"
+  ["Drill Sergeant"]="DGzg6RaUqxGRTHSBjfgF"
 )
 
 case "$1" in
@@ -37,7 +36,42 @@ case "$1" in
     done | sort
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    echo "Usage: Voice Switch <name>"
+    echo "Usage: voice-manager.sh switch <name>"
+    echo "       voice-manager.sh preview"
+    ;;
+
+  preview)
+    echo "🎤 Voice Preview - Playing first 3 voices..."
+    echo ""
+
+    # Get play-tts.sh path
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    TTS_SCRIPT="$SCRIPT_DIR/play-tts.sh"
+
+    # Sort voices and preview first 3
+    VOICE_ARRAY=()
+    for voice in "${!VOICES[@]}"; do
+      VOICE_ARRAY+=("$voice")
+    done
+
+    # Sort the array
+    IFS=$'\n' SORTED_VOICES=($(sort <<<"${VOICE_ARRAY[*]}"))
+    unset IFS
+
+    # Play first 3 voices
+    COUNT=0
+    for voice in "${SORTED_VOICES[@]}"; do
+      if [ $COUNT -eq 3 ]; then
+        break
+      fi
+      echo "🔊 ${voice}..."
+      "$TTS_SCRIPT" "Hi, I'm ${voice}" "${VOICES[$voice]}"
+      sleep 0.5
+      COUNT=$((COUNT + 1))
+    done
+
+    echo ""
+    echo "Would you like to hear more? Reply 'yes' to continue."
     ;;
 
   switch)
@@ -77,7 +111,7 @@ case "$1" in
     if [ -f "$VOICE_FILE" ]; then
       cat "$VOICE_FILE"
     else
-      echo "Cowboy"
+      echo "Cowboy Bob"
     fi
     ;;
 

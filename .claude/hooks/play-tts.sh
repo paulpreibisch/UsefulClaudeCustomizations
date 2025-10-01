@@ -63,10 +63,10 @@ if [[ -z "$VOICE_ID" ]]; then
     VOICE_ID="${VOICES[$VOICE_NAME]}"
   fi
 
-  # Final fallback to Cowboy default
+  # Final fallback to Cowboy Bob default
   if [[ -z "$VOICE_ID" ]]; then
-    echo "⚠️ No voice configured, using Cowboy default"
-    VOICE_ID="${VOICES[Cowboy]}"
+    echo "⚠️ No voice configured, using Cowboy Bob default"
+    VOICE_ID="${VOICES[Cowboy Bob]}"
   fi
 fi
 
