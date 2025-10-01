@@ -56,22 +56,22 @@ interface HistoryEntry {
 
 // Configuration
 const CONFIG = {
-  // Session-specific voice mapping for Terminal Keeper sessions
-  // Each session gets a unique, consistent voice for easy audio identification
-  sessionVoices: {
-    'Session 1': 'yOsUZuYik0dKCynjfgaE',      // Your custom voice (Session 1)
-    'Session 2': 'EXAVITQu4vr4xnSDxMaL',      // Rachel - Professional newsreader (female)
-    'Session 3': 'JBFqnCBsd6RMkjVDRZzb',      // George - Calm narrator (male)
-    'Session 4': 'MF3mGyEYCl7XYWbV9V6O',      // Emily - Bubbly teenager (female)
-    'Session 5': 'TxGEqnHWrfWFTfGW9XjX',      // Josh - Energetic young adult (male)
-    'TypeScript': 'onwK4e9ZLuTAKqWW03F9',      // Daniel - British accent (male)
-    'Frontend': 'pNInz6obpgDQGcFmaJgB',        // Adam - Friendly guy next door (male)
-    'Backend': 'ErXwobaYiN019PkySvjV',         // Antoni - Well-rounded (male)
-    'Testing': 'oWAxZDx7w5VEj9dCyTzz',        // Grace - Soft spoken (female)
-  },
+  // Available voice IDs (replace with your own ElevenLabs voice IDs)
+  // These will be dynamically assigned to sessions found in .vscode/sessions.json
+  availableVoiceIds: [
+    'zYcjlYFOd3taleS0gkk3',  // Custom Voice 1 - Replace with your voice ID
+    'ruirxsoakN0GWmGNIo04',  // Custom Voice 2 - Replace with your voice ID
+    'DGzg6RaUqxGRTHSBjfgF',  // Custom Voice 3 - Replace with your voice ID
+    'vfaqCOvlrKi4Zp7C2IAm',  // Custom Voice 4 - Replace with your voice ID
+    'KTPVrSVAEUSJRClDzBw7',  // Custom Voice 5 - Replace with your voice ID
+    'flHkNRp1BlvT73UL6gyz',  // Custom Voice 6 - Replace with your voice ID
+    '9yzdeviXkFddZ4Oz8Mok',  // Custom Voice 7 - Replace with your voice ID
+    'yjJ45q8TVCrtMhEKurxY',  // Custom Voice 8 - Replace with your voice ID
+    '0SpgpJ4D3MpHCiWdyTg3',  // Custom Voice 9 - Replace with your voice ID
+  ],
 
   // Default fallback voice ID if session not found in mapping
-  defaultVoiceId: 'yOsUZuYik0dKCynjfgaE',
+  defaultVoiceId: 'zYcjlYFOd3taleS0gkk3',
 
   // Voice settings for natural speech
   voiceSettings: {
@@ -178,6 +178,35 @@ function detectTerminalSession(): string {
   }
 }
 
+// Function to build dynamic voice mapping from sessions.json
+function buildDynamicVoiceMapping(): {[key: string]: string} {
+  try {
+    const sessionsPath = join(process.cwd(), '.vscode', 'sessions.json');
+
+    if (!existsSync(sessionsPath)) {
+      console.log('ℹ️ No .vscode/sessions.json found, using default voice for all sessions');
+      return {};
+    }
+
+    const sessionsConfig: SessionsConfig = JSON.parse(readFileSync(sessionsPath, 'utf8'));
+    const activeSessionGroup = sessionsConfig.sessions[sessionsConfig.active] || [];
+
+    // Build voice mapping by assigning voices to sessions in order
+    const voiceMapping: {[key: string]: string} = {};
+
+    activeSessionGroup.forEach((session, index) => {
+      const voiceIndex = index % CONFIG.availableVoiceIds.length;
+      voiceMapping[session.name] = CONFIG.availableVoiceIds[voiceIndex];
+      console.log(`🎭 Mapped session "${session.name}" to voice ${voiceIndex + 1}: ${CONFIG.availableVoiceIds[voiceIndex]}`);
+    });
+
+    return voiceMapping;
+  } catch (error) {
+    console.log('⚠️ Error building dynamic voice mapping:', error);
+    return {};
+  }
+}
+
 // Function to get voice ID for a specific session
 function getVoiceForSession(sessionName: string): string {
   if (!sessionName) {
@@ -185,12 +214,14 @@ function getVoiceForSession(sessionName: string): string {
     return CONFIG.defaultVoiceId;
   }
 
-  const voiceId = CONFIG.sessionVoices[sessionName] || CONFIG.defaultVoiceId;
+  // Build dynamic voice mapping from current sessions.json
+  const sessionVoices = buildDynamicVoiceMapping();
+  const voiceId = sessionVoices[sessionName] || CONFIG.defaultVoiceId;
 
-  if (CONFIG.sessionVoices[sessionName]) {
-    console.log(`🎭 Using session-specific voice for "${sessionName}"`);
+  if (sessionVoices[sessionName]) {
+    console.log(`🎭 Using dynamically assigned voice for "${sessionName}"`);
   } else {
-    console.log(`🎭 Session "${sessionName}" not in voice mapping, using default voice`);
+    console.log(`🎭 Session "${sessionName}" not found in current sessions, using default voice`);
   }
 
   return voiceId;

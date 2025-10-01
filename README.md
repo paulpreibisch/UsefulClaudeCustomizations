@@ -23,20 +23,64 @@ Automatically hear natural voice summaries of completed tasks using ElevenLabs' 
 
 ## 🚀 Quick Start
 
-### 1. Get Your ElevenLabs API Key
+### Automated Installation (Recommended)
+
+The installer provides detailed explanations for each step and supports both global and project-specific installations.
+
+1. **Get Your ElevenLabs API Key**
+   - Sign up for a free account at [ElevenLabs](https://elevenlabs.io)
+   - Go to your [API Keys page](https://elevenlabs.io/api-keys)
+   - Copy your API key
+
+2. **Set Environment Variable**
+   ```bash
+   # Add to your shell profile (~/.bashrc, ~/.zshrc, etc.)
+   export ELEVENLABS_API_KEY="your-api-key-here"
+   ```
+
+3. **Run the Installer**
+   ```bash
+   # Clone the repo
+   git clone https://github.com/PaulKinlan/UsefulClaudeCustomizations.git
+   cd UsefulClaudeCustomizations
+
+   # Run the install script
+   ./install.sh
+   ```
+
+4. **Choose Installation Type**
+   - **Global**: Press Enter when prompted - affects all Claude Code sessions
+   - **Project-specific**: Enter your project path - only affects that project
+
+   The installer will:
+   - Explain what tsx is and why it's needed
+   - Show what each step does and why
+   - Ask for confirmation before making changes
+   - Preserve your existing settings (creates backup)
+   - Install hooks in either `~/.claude/` or `<project>/.claude/`
+
+5. **Restart Claude Code**
+   - The installer handles everything: hooks, settings, and directory setup
+   - Just restart Claude Code and you're ready to go!
+
+### Manual Installation
+
+If you prefer to install manually, follow these steps:
+
+#### 1. Get Your ElevenLabs API Key
 
 1. Sign up for a free account at [ElevenLabs](https://elevenlabs.io)
 2. Go to your [API Keys page](https://elevenlabs.io/api-keys)
 3. Copy your API key
 
-### 2. Set Environment Variable
+#### 2. Set Environment Variable
 
 ```bash
 # Add to your shell profile (~/.bashrc, ~/.zshrc, etc.)
 export ELEVENLABS_API_KEY="your-api-key-here"
 ```
 
-### 3. Install the Hook
+#### 3. Install the Hook
 
 ```bash
 # Create Claude hooks directory
@@ -49,7 +93,7 @@ cp hooks/stop-elevenlabs.ts ~/.claude/hooks/
 chmod +x ~/.claude/hooks/stop-elevenlabs.ts
 ```
 
-### 4. Configure Claude Settings
+#### 4. Configure Claude Settings
 
 Create or update `~/.claude/settings.json`:
 
@@ -71,7 +115,7 @@ Create or update `~/.claude/settings.json`:
 }
 ```
 
-### 5. Restart Claude Code
+#### 5. Restart Claude Code
 
 **Important**: Restart Claude Code for the hooks to take effect.
 
@@ -126,6 +170,27 @@ Available characters include:
 - **Pirate Marshal** - Sea dog with Cornwall accent
 
 Browse more voices at [ElevenLabs Voice Library](https://elevenlabs.io/voice-library).
+
+### 🎤 Personal Voice Collection
+
+Here are 14 unique voices from my personal ElevenLabs collection with their IDs and share links:
+
+| Voice Name | Voice ID | Share Link | Description |
+|------------|----------|------------|-------------|
+| **Northern Terry** (`wo6udizrrtpIxWGp2qJk`) | `wo6udizrrtpIxWGp2qJk` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/3d1fa6a5595e0a31fff8d7c1a2f2794b91ca87ddd200066dfbdfcef662a65a1b/wo6udizrrtpIxWGp2qJk) | Eccentric & husky character from the North of England |
+| **Grandpa Spuds Oxley** (`NOpBlnGInO9m6vDvFkFC`) | `NOpBlnGInO9m6vDvFkFC` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/ae23ca715ed6b339e4ad22f2d45dd40b36a6449e031b4f8970bfe29524bd1bbc/NOpBlnGInO9m6vDvFkFC) | A friendly grandpa who knows how to enthrall his audience |
+| **Ms. Walker** (`DLsHlh26Ugcm6ELvS0qi`) | `DLsHlh26Ugcm6ELvS0qi` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/68b2b457084a4258a6d22d361b6abcb7631a988b8ddabd6cb7d548530efdd859/DLsHlh26Ugcm6ELvS0qi) | Warm & caring Southern mom |
+| **Ralf Eisend** (`A9evEp8yGjv4c3WsIKuY`) | `A9evEp8yGjv4c3WsIKuY` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/b3ae87252403036c0ea46703a3f6d1558f19c40b95ce9ac604b3ca8271fe51b3/A9evEp8yGjv4c3WsIKuY) | International audiobook speaker with clear and deep voice |
+| **Amy** (`bhJUNIXWQQ94l8eI2VUf`) | `bhJUNIXWQQ94l8eI2VUf` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/5bef9583ed80e9300f3cb1fbdcad0e849f658837038f9625845d8aaa06c5c8ec/bhJUNIXWQQ94l8eI2VUf) | Young and natural, relaxed and friendly tone |
+| **Michael** (`U1Vk2oyatMdYs096Ety7`) | `U1Vk2oyatMdYs096Ety7` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/ad827f2c0300d36094ca79e518b1a5df8c3609eb269353c30dcec3ac8878a437/U1Vk2oyatMdYs096Ety7) | Deep and controlled British urban voice |
+| **Jessica Anne Bogart** (`flHkNRp1BlvT73UL6gyz`) | `flHkNRp1BlvT73UL6gyz` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/066125d0c3eac062cd6655ed319d2347c29d07eab96ee22c6ebe7ef1841c3b1a/flHkNRp1BlvT73UL6gyz) | The Villain! Wickedly eloquent, calculating, cruel and calm |
+| **Aria** (`TC0Zp7WVFzhA8zpTlRqV`) | `TC0Zp7WVFzhA8zpTlRqV` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/2b0d07a6ce09d07685ec4dabdf136a37762f1764f4de7d3b52d2a108940683c4/TC0Zp7WVFzhA8zpTlRqV) | Sexy female villain voice like dark velvet |
+| **Lutz Laugh** (`9yzdeviXkFddZ4Oz8Mok`) | `9yzdeviXkFddZ4Oz8Mok` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/1c07ef5740387faa0fd1f7e624ce51055c0b270674ab3da0f0e22c2882bce3c4/9yzdeviXkFddZ4Oz8Mok) | Chuckling and giggly character voice |
+| **Dr. Von Fusion** (`yjJ45q8TVCrtMhEKurxY`) | `yjJ45q8TVCrtMhEKurxY` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/7d685d7536ae3391b6591c42fe9dbc281640b415005069ea019e870008dd535f/yjJ45q8TVCrtMhEKurxY) | Energetic, quirky voice ideal for eccentric characters |
+| **Matthew Schmitz** (`0SpgpJ4D3MpHCiWdyTg3`) | `0SpgpJ4D3MpHCiWdyTg3` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/1bdf478ac5e1a81b0b8423faadde277a29cb25195ed2c86adcb0622464c9b930/0SpgpJ4D3MpHCiWdyTg3) | Elitist, arrogant tyrant voiced by professional narrator |
+| **Demon Monster** (`vfaqCOvlrKi4Zp7C2IAm`) | `vfaqCOvlrKi4Zp7C2IAm` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/ad827f2c0300d36094ca79e518b1a5df8c3609eb269353c30dcec3ac8878a437/vfaqCOvlrKi4Zp7C2IAm) | Deep demon voice perfect for horror and fantasy |
+| **Cowboy Bob** (`KTPVrSVAEUSJRClDzBw7`) | `KTPVrSVAEUSJRClDzBw7` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/7d685d7536ae3391b6591c42fe9dbc281640b415005069ea019e870008dd535f/KTPVrSVAEUSJRClDzBw7) | Rich voice with rugged warmth, perfect for tales |
+| **Drill Sergeant** (`DGzg6RaUqxGRTHSBjfgF`) | `DGzg6RaUqxGRTHSBjfgF` | [🔗 Share](https://elevenlabs.io/app/voice-lab/share/5bef9583ed80e9300f3cb1fbdcad0e849f658837038f9625845d8aaa06c5c8ec/DGzg6RaUqxGRTHSBjfgF) | Harsh, barking tone with relentless authority |
 
 ### Adjust Voice Settings
 
@@ -195,15 +260,29 @@ This helps you instantly identify which Claude instance completed the task just 
 
 ## 🔧 Project-Specific Setup
 
-For project-specific voices (instead of global), create `.claude/settings.json` in your project:
+The installer now supports project-specific installations! When you run `./install.sh`, you'll be prompted:
 
-```bash
-# In your project directory
-mkdir -p .claude/hooks
-cp /path/to/hooks/stop-elevenlabs.ts .claude/hooks/
+```
+Enter project directory path (or press Enter for global installation):
 ```
 
-Then create `.claude/settings.json` with the hook configuration.
+**Global Installation** (press Enter):
+- Installs to `~/.claude/`
+- Affects all Claude Code sessions
+- Use when you want voice announcements everywhere
+
+**Project-Specific Installation** (enter path):
+- Installs to `<your-project>/.claude/`
+- Only affects that specific project
+- Use when you want different voices per project
+- Perfect for team projects with shared configurations
+
+The installer handles everything automatically:
+- Creates `.claude/hooks/` directory in your project
+- Copies the voice hook to your project
+- Creates/updates `.claude/settings.json` in your project
+- Creates `.claude/audio/` for audio files
+- Preserves any existing project settings
 
 ## 📁 File Structure
 

@@ -1,187 +1,129 @@
-# 🎭 ElevenLabs Voice Library for Claude Code
+# 🎭 Terminal Session Voice Mapping
 
-Find the perfect voice for your Claude Code TTS announcements!
+Each Terminal Keeper session now has its own unique voice for easy audio identification!
 
-## 🎤 Finding Voices
+## 🎤 How Dynamic Voice Assignment Works
 
-The [ElevenLabs Voice Library](https://elevenlabs.io/voice-library) offers hundreds of AI voices with different:
-- **Accents**: American, British, Australian, and more
-- **Ages**: Young, middle-aged, elderly
-- **Styles**: Professional, casual, energetic, calm
-- **Genders**: Male, female, neutral
+The hook **automatically reads your `.vscode/sessions.json`** file and assigns voices to sessions dynamically:
 
-### How to Browse Voices
+1. **Automatic Detection**: Reads current Terminal Keeper sessions from `.vscode/sessions.json`
+2. **Dynamic Assignment**: Assigns voices to sessions in order (first session gets first voice, etc.)
+3. **Consistent Mapping**: The same session always gets the same voice (as long as session order doesn't change)
+4. **Adaptive**: Automatically handles new sessions or session changes
 
-1. Visit the [Voice Library](https://elevenlabs.io/voice-library)
-2. Use filters to narrow by:
-   - Language
-   - Accent
-   - Age
-   - Gender
-   - Use case (narration, conversational, etc.)
-3. Click **Preview** to hear samples
-4. Click **Add to Lab** to use the voice
-5. Copy the **Voice ID** from your account
+## 🎯 Example Voice Assignment
 
-## 📋 Pre-Configured Voice IDs
-
-Here are the voice IDs already configured in the scripts:
-
-| Voice Name | Voice ID | Description |
-|------------|----------|-------------|
-| **Tiffany** | `flHkNRp1BlvT73UL6gyz` | Soft female Voice |
-| **Cowboy** | `KTPVrSVAEUSJRClDzBw7` | Deep, authoritative male |
-| **JoAnne** | `TC0Zp7WVFzhA8zpTlRqV` | Soft, friendly female |
-| **Alex** | `zYcjlYFOd3taleS0gkk3` | Professional male |
-| **Sarah** | `ruirxsoakN0GWmGNIo04` | Clear female |
-| **Marcus** | `DGzg6RaUqxGRTHSBjfgF` | Warm male |
-| **Deep Male** | `vfaqCOvlrKi4Zp7C2IAm` | Very deep male |
-| **David** | `9yzdeviXkFddZ4Oz8Mok` | Standard male |
-| **Isabella** | `yjJ45q8TVCrtMhEKurxY` | Elegant female |
-| **Michael** | `0SpgpJ4D3MpHCiWdyTg3` | Neutral male |
-
-## 🔧 Adding Your Own Voices
-
-### Step 1: Find a Voice You Like
-
-1. Browse the [Voice Library](https://elevenlabs.io/voice-library)
-2. Add the voice to your account
-3. Get the Voice ID (11-character alphanumeric string)
-
-### Step 2: Update the Scripts
-
-Edit both `voice-manager.sh` and `play-tts.sh` to add your voice:
-
-```bash
-# In both files, add to the VOICES array:
-declare -A VOICES=(
-  ["MyCustomVoice"]="abc123XYZ456"  # Your voice ID here
-  # ... existing voices
-)
+If your `.vscode/sessions.json` contains these sessions:
+```json
+{
+  "active": "default",
+  "sessions": {
+    "default": [
+      {"name": "SageDev 1", "cwd": "..."},
+      {"name": "SageDev 2", "cwd": "..."},
+      {"name": "WSL SageDev", "cwd": "..."},
+      {"name": "TypeScript", "cwd": "..."},
+      {"name": "Frontend", "cwd": "..."}
+    ]
+  }
+}
 ```
 
-### Step 3: Test Your New Voice
+The voices will be assigned automatically:
+- **SageDev 1** → Voice 1 (`zYcjlYFOd3taleS0gkk3`)
+- **SageDev 2** → Voice 2 (`ruirxsoakN0GWmGNIo04`)
+- **WSL SageDev** → Voice 3 (`DGzg6RaUqxGRTHSBjfgF`)
+- **TypeScript** → Voice 4 (`vfaqCOvlrKi4Zp7C2IAm`)
+- **Frontend** → Voice 5 (`KTPVrSVAEUSJRClDzBw7`)
 
-```bash
-# Switch to your new voice
-~/.claude/hooks/voice-manager.sh switch MyCustomVoice
+## ⚠️ Important Note
 
-# Test it
-~/.claude/hooks/play-tts.sh "Testing my new voice"
+The example voice IDs provided are custom/personal voices from an ElevenLabs account. They may not be available in the public voice library, which means:
+
+1. **Personal Use**: These voices are likely from a personal ElevenLabs account
+2. **Custom Voices**: They might be voice clones or premium voices
+3. **Account Specific**: Other users will need to replace these with their own voice IDs
+
+## 🔧 For Other Users
+
+Replace the voice IDs in the `availableVoiceIds` array with your own ElevenLabs voice IDs:
+
+```typescript
+availableVoiceIds: [
+  'your-voice-id-1',  // Will be assigned to first session
+  'your-voice-id-2',  // Will be assigned to second session
+  'your-voice-id-3',  // Will be assigned to third session
+  // ... add more voice IDs as needed
+]
 ```
 
-## 🎯 Voice Selection Tips
+## 🔊 How It Works
 
-### For Professional Work
-- Choose clear, neutral voices
-- Avoid overly dramatic or character voices
-- Consider accent preferences for your region
+1. **Automatic Detection**: Hook reads `.vscode/sessions.json` to identify your current session
+2. **Voice Mapping**: Each session gets its unique voice that stays consistent
+3. **Audio Identification**: You'll instantly know which session completed a task by the voice
 
-### For Long Sessions
-- Pick voices that aren't fatiguing to hear
-- Softer voices work better for extended listening
-- Avoid extremely high or low pitches
+## 🎯 Example Outputs
 
-### For Multiple Users/Projects
-- Use different voices for different projects
-- Easy to identify which project completed tasks
-- Helps maintain context when multitasking
+- **SageDev 1**: Your custom voice says *"Session SageDev 1: Created test file successfully"*
+- **SageDev 2**: Rachel says *"Session SageDev 2: Updated configuration settings"*
+- **WSL SageDev**: George says *"Session WSL SageDev: Fixed authentication bug"*
 
-## 📊 Popular Voice Categories
+## ⚙️ Customization
 
-### Professional/Business
-- Clear diction
-- Neutral accent
-- Medium tempo
-- Examples: Alex, Sarah, David
+### Add New Sessions
+Edit the `sessionVoices` mapping in `hooks/stop-elevenlabs.ts`:
 
-### Friendly/Casual
-- Warm tone
-- Conversational style
-- Approachable feeling
-- Examples: Joanne, Sophia, Marcus
-
-### Authoritative/Serious
-- Deep voice
-- Commanding presence
-- Formal delivery
-- Examples: Cowboy, Deep Male, Michael
-
-### Energetic/Upbeat
-- Higher energy
-- Fast-paced
-- Enthusiastic
-- Examples: Isabella
-
-## 🔍 Finding Voice IDs
-
-### Method 1: From the Voice Lab
-1. Go to [ElevenLabs](https://elevenlabs.io)
-2. Click on **Voice Lab**
-3. Select any voice you've added
-4. The Voice ID appears in the URL or voice settings
-
-### Method 2: From the API
-```bash
-# List all your voices
-curl -H "xi-api-key: $ELEVENLABS_API_KEY" \
-  https://api.elevenlabs.io/v1/voices
+```typescript
+sessionVoices: {
+  'Your New Session': 'voice-id-here',  // Add your session
+  // ... existing mappings
+}
 ```
 
-The response includes all voice IDs and names.
+### Change Voice for Existing Session
+Simply update the voice ID in the mapping and restart Claude Code.
 
-## 🎨 Voice Customization
+### Manual Override
+```bash
+export CLAUDE_SESSION_NAME="TypeScript"
+# Now all tasks will use Daniel's British accent
+```
 
-### Clone Your Own Voice
-1. Go to **Voice Lab** in ElevenLabs
-2. Click **Instant Voice Cloning**
-3. Upload 1-2 minute audio sample of your voice
-4. Get the Voice ID for your cloned voice
-5. Add it to the scripts
+## 🎭 Voice Characteristics
 
-### Adjust Voice Settings
-While not configurable in the basic scripts, the ElevenLabs API supports:
-- **Stability**: How consistent the voice sounds (0.0-1.0)
-- **Similarity Boost**: How similar to the original voice (0.0-1.0)
-- **Style**: Additional expression control
+- **Custom (SageDev 1)**: Your personal selection
+- **Rachel**: Clear, professional, perfect for serious tasks
+- **George**: Calm and reassuring, great for complex operations
+- **Emily**: Energetic and friendly, good for quick tasks
+- **Josh**: Enthusiastic, perfect for development work
+- **Daniel**: Distinguished British accent, ideal for TypeScript work
+- **Adam**: Warm and approachable, great for frontend tasks
+- **Antoni**: Balanced and versatile, perfect for backend operations
+- **Grace**: Gentle and precise, excellent for testing feedback
 
-You can modify `play-tts.sh` to add these parameters to the API call.
+## 🔧 Advanced Configuration
 
-## 🌟 Popular ElevenLabs Voices
+### Finding New Voice IDs
+1. Go to [ElevenLabs Voice Library](https://elevenlabs.io/voice-library)
+2. Preview voices and find ones you like
+3. Copy the voice ID from the URL or API
+4. Add to your `sessionVoices` mapping
 
-Here are some highly-rated voices from the community:
+### Personal Collection Voice IDs
+- **Northern Terry**: `wo6udizrrtpIxWGp2qJk` (eccentric & husky character from the North of England)
+- **Grandpa Spuds Oxley**: `NOpBlnGInO9m6vDvFkFC` (friendly grandpa storyteller)
+- **Ms. Walker**: `DLsHlh26Ugcm6ELvS0qi` (warm & caring Southern mom)
+- **Ralf Eisend**: `A9evEp8yGjv4c3WsIKuY` (international audiobook speaker)
+- **Amy**: `bhJUNIXWQQ94l8eI2VUf` (young and natural, relaxed and friendly)
+- **Michael**: `U1Vk2oyatMdYs096Ety7` (deep and controlled British urban voice)
+- **Jessica Anne Bogart**: `flHkNRp1BlvT73UL6gyz` (villain - wickedly eloquent)
+- **Aria**: `TC0Zp7WVFzhA8zpTlRqV` (sexy female villain voice)
+- **Lutz Laugh**: `9yzdeviXkFddZ4Oz8Mok` (chuckling and giggly character)
+- **Dr. Von Fusion**: `yjJ45q8TVCrtMhEKurxY` (energetic, quirky eccentric character)
+- **Matthew Schmitz**: `0SpgpJ4D3MpHCiWdyTg3` (elitist, arrogant tyrant)
+- **Demon Monster**: `vfaqCOvlrKi4Zp7C2IAm` (deep demon for horror/fantasy)
+- **Cowboy Bob**: `KTPVrSVAEUSJRClDzBw7` (rugged warmth, perfect for tales)
+- **Drill Sergeant**: `DGzg6RaUqxGRTHSBjfgF` (harsh, commanding authority)
 
-### Narrator/Storytelling
-- **Daniel** (British, refined)
-- **George** (Calm, reassuring)
-
-### Professional/Corporate
-- **Rachel** (Clear newsreader)
-- **Adam** (Friendly professional)
-
-### Casual/Conversational
-- **Emily** (Young, energetic)
-- **Antoni** (Well-rounded)
-
-### Character/Unique
-- **Charlie** (Cheerful)
-- **Grace** (Soft-spoken)
-
-## 💡 Pro Tips
-
-1. **Test before committing** - Always preview voices before adding them
-2. **Keep it simple** - Stick with 3-5 voices you actually use
-3. **Match the task** - Use calm voices for debugging, energetic ones for successes
-4. **Regional preferences** - Choose accents your team is comfortable with
-5. **Backup voices** - Keep at least 2 voices configured in case one becomes unavailable
-
-## 🔗 Useful Links
-
-- [ElevenLabs Voice Library](https://elevenlabs.io/voice-library)
-- [Voice Lab (for cloning)](https://elevenlabs.io/voice-lab)
-- [ElevenLabs API Documentation](https://docs.elevenlabs.io/)
-- [Pricing & Plans](https://elevenlabs.io/pricing)
-
----
-
-**Happy voice hunting!** 🎉 Find voices that make your Claude Code experience more enjoyable!
+Now you can identify which Claude instance completed a task just by listening! 🎉
