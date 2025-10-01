@@ -274,8 +274,8 @@ fi
 
 echo ""
 echo -e "${CYAN}Next Steps:${NC}"
-echo "1. ${YELLOW}Restart Claude Code${NC} for the hooks to take effect"
-echo "2. ${YELLOW}Activate the output style${NC}:"
+echo -e "1. ${YELLOW}Restart Claude Code${NC} for the hooks to take effect"
+echo -e "2. ${YELLOW}Activate the output style${NC}:"
 echo "   Run: /output-style voice-summaries-enhanced"
 echo "   This enables automatic TTS markers in Claude's responses"
 echo "3. Run any Claude command (e.g., 'fix this bug')"
