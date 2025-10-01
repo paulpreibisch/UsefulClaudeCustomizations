@@ -119,6 +119,16 @@ Create or update `~/.claude/settings.json`:
 
 **Important**: Restart Claude Code for the hooks to take effect.
 
+#### 6. Activate the Output Style
+
+After restarting, activate the marker-based TTS system:
+
+```bash
+/output-style voice-summaries-enhanced
+```
+
+This enables automatic TTS markers in Claude's responses. Claude will now add invisible markers that trigger voice summaries for acknowledgements and task completions.
+
 ## 🎭 Customization
 
 ### Change Voice
@@ -198,8 +208,10 @@ export CLAUDE_SESSION_NAME="My Custom Session"
 Instead of: *"Created test file successfully"*
 You'll hear: *"Session MyProject: Created test file successfully"* (in Rachel's professional voice)
 
-### 🎭 Voice Mapping
-Each session can be mapped to its own unique voice. Here's the recommended professional voice mapping:
+### 🎭 Voice Mapping & User-Specified Voices
+
+#### Automatic Session-Based Voice Mapping
+Each session can be mapped to its own unique voice automatically:
 
 - **Session 1**: `yOsUZuYik0dKCynjfgaE` - Your custom voice
 - **Session 2**: `EXAVITQu4vr4xnSDxMaL` - Rachel (professional newsreader)
@@ -214,6 +226,24 @@ Each session can be mapped to its own unique voice. Here's the recommended profe
 See [Voice Mapping Guide](docs/VOICE_MAPPING.md) for complete details.
 
 This helps you instantly identify which Claude instance completed the task just by the voice!
+
+#### User-Specified Voice Override (New!)
+You can now specify a voice for individual commands using markers in your output style:
+
+**Example with voice override:**
+```markdown
+User: "Fix the bug using Aria voice"
+Claude response: I'll fix the bug.<!-- ACKNOWLEDGE: Fixing bug [VOICE: Aria] -->
+...work completed...
+Claude response: Fixed successfully.<!-- TASK_COMPLETE: Fixed bug [VOICE: Aria] -->
+```
+
+**Supported voice names** (from ElevenLabs Character Voices):
+- Northern Terry, Grandpa Spuds Oxley, Ms. Walker, Ralf Eisend, Amy, Michael
+- Jessica Anne Bogart, Aria, Lutz Laugh, Dr. Von Fusion, Matthew Schmitz
+- Demon Monster, Cowboy Bob, Drill Sergeant
+
+See the **voice-summaries-enhanced.md** output style and [Voice Override Feature Guide](docs/VOICE_OVERRIDE_FEATURE.md) for full documentation.
 
 ## 💰 Pricing & Usage
 

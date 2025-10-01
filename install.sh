@@ -103,7 +103,13 @@ echo "     Your existing settings (if any) will be preserved - we only add"
 echo "     the voice announcement hook."
 echo ""
 
-echo -e "${CYAN}Step 5: Create audio directory (${INSTALL_DIR}/audio)${NC}"
+echo -e "${CYAN}Step 5: Install output styles (${INSTALL_DIR}/output-styles)${NC}"
+echo "WHY: Output styles configure how Claude formats responses."
+echo "     The voice-summaries-enhanced style adds invisible markers that"
+echo "     trigger TTS automatically for acknowledgements and completions."
+echo ""
+
+echo -e "${CYAN}Step 6: Create audio directory (${INSTALL_DIR}/audio)${NC}"
 echo "WHY: All generated voice files are saved here for:"
 echo "     - Replaying announcements if you missed them"
 echo "     - Debugging if audio doesn't play"
@@ -234,8 +240,16 @@ fi
 echo "   Claude will now announce task completions with voice."
 echo ""
 
-# Step 5: Create audio directory
-echo -e "${CYAN}Step 5/5: Creating audio output directory...${NC}"
+# Step 5: Install output styles
+echo -e "${CYAN}Step 5/6: Installing output styles...${NC}"
+mkdir -p "$INSTALL_DIR/output-styles"
+cp .claude/output-styles/voice-summaries-enhanced.md "$INSTALL_DIR/output-styles/"
+echo -e "${GREEN}✅ Installed voice-summaries-enhanced output style${NC}"
+echo "   Activate with: /output-style voice-summaries-enhanced"
+echo ""
+
+# Step 6: Create audio directory
+echo -e "${CYAN}Step 6/6: Creating audio output directory...${NC}"
 mkdir -p "$INSTALL_DIR/audio"
 echo -e "${GREEN}✅ Created ${INSTALL_DIR}/audio${NC}"
 echo "   All voice announcements will be saved here."
@@ -261,8 +275,11 @@ fi
 echo ""
 echo -e "${CYAN}Next Steps:${NC}"
 echo "1. ${YELLOW}Restart Claude Code${NC} for the hooks to take effect"
-echo "2. Run any Claude command (e.g., 'fix this bug')"
-echo "3. Listen for the voice announcement when the task completes!"
+echo "2. ${YELLOW}Activate the output style${NC}:"
+echo "   Run: /output-style voice-summaries-enhanced"
+echo "   This enables automatic TTS markers in Claude's responses"
+echo "3. Run any Claude command (e.g., 'fix this bug')"
+echo "4. Listen for the voice announcement when the task completes!"
 echo ""
 
 echo -e "${CYAN}Customization:${NC}"

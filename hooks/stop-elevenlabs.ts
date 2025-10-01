@@ -70,6 +70,28 @@ const CONFIG = {
     '0SpgpJ4D3MpHCiWdyTg3',  // Custom Voice 9 - Replace with your voice ID
   ],
 
+  // Voice name to ID mapping (for user-specified voices)
+  // From ElevenLabs Character Voices Collection
+  // Note: Keys are lowercase for case-insensitive matching
+  voiceNameMap: {
+    'Northern Terry': 'wo6udizrrtpIxWGp2qJk',
+    'Grandpa Spuds Oxley': 'NOpBlnGInO9m6vDvFkFC',
+    'Ms. Walker': 'DLsHlh26Ugcm6ELvS0qi',
+    'Ms Walker': 'DLsHlh26Ugcm6ELvS0qi',
+    'Ralf Eisend': 'A9evEp8yGjv4c3WsIKuY',
+    'Amy': 'bhJUNIXWQQ94l8eI2VUf',
+    'Michael': 'U1Vk2oyatMdYs096Ety7',
+    'Jessica Anne Bogart': 'flHkNRp1BlvT73UL6gyz',
+    'Aria': 'TC0Zp7WVFzhA8zpTlRqV',
+    'Lutz Laugh': '9yzdeviXkFddZ4Oz8Mok',
+    'Dr. Von Fusion': 'yjJ45q8TVCrtMhEKurxY',
+    'Dr Von Fusion': 'yjJ45q8TVCrtMhEKurxY',
+    'Matthew Schmitz': '0SpgpJ4D3MpHCiWdyTg3',
+    'Demon Monster': 'vfaqCOvlrKi4Zp7C2IAm',
+    'Cowboy Bob': 'KTPVrSVAEUSJRClDzBw7',
+    'Drill Sergeant': 'DGzg6RaUqxGRTHSBjfgF'
+  },
+
   // Default fallback voice ID if session not found in mapping
   defaultVoiceId: 'zYcjlYFOd3taleS0gkk3',
 
@@ -227,7 +249,32 @@ function getVoiceForSession(sessionName: string): string {
   return voiceId;
 }
 
-// Function to generate a concise summary from Claude's response
+// Function to check if response contains voice markers and extract summary
+function checkForVoiceMarker(response: string): { shouldSpeak: boolean; summary: string; voiceOverride?: string } {
+  // Check for TASK_COMPLETE marker with optional voice
+  const completeMatch = response.match(/<!--\s*TASK_COMPLETE:\s*(.+?)(?:\s*\[VOICE:\s*(.+?)\])?\s*-->/);
+  if (completeMatch) {
+    const summary = completeMatch[1].trim();
+    const voiceOverride = completeMatch[2]?.trim();
+    console.log(`✅ Found TASK_COMPLETE marker: "${summary}"${voiceOverride ? ` (voice: ${voiceOverride})` : ''}`);
+    return { shouldSpeak: true, summary, voiceOverride };
+  }
+
+  // Check for ACKNOWLEDGE marker with optional voice
+  const ackMatch = response.match(/<!--\s*ACKNOWLEDGE:\s*(.+?)(?:\s*\[VOICE:\s*(.+?)\])?\s*-->/);
+  if (ackMatch) {
+    const summary = ackMatch[1].trim();
+    const voiceOverride = ackMatch[2]?.trim();
+    console.log(`👋 Found ACKNOWLEDGE marker: "${summary}"${voiceOverride ? ` (voice: ${voiceOverride})` : ''}`);
+    return { shouldSpeak: true, summary, voiceOverride };
+  }
+
+  // No marker found - don't speak
+  console.log(`🔇 No voice marker found, skipping TTS`);
+  return { shouldSpeak: false, summary: '' };
+}
+
+// Function to generate a concise summary from Claude's response (legacy fallback)
 function generateSummary(response: string): string {
   // Clean the response first
   const cleanedResponse = response
@@ -453,11 +500,20 @@ process.stdin.on('end', async () => {
   try {
     const data: StopPayload = input ? JSON.parse(input) : {};
 
+    // Check for voice markers first
+    const markerCheck = checkForVoiceMarker(data.response || '');
+
+    // If no marker found, exit early without TTS
+    if (!markerCheck.shouldSpeak) {
+      console.log('ℹ️ No voice marker detected - skipping TTS generation');
+      process.exit(0);
+    }
+
     // Detect current terminal session
     const sessionName = detectTerminalSession();
 
-    // Generate summary from Claude's response
-    const baseSummary = data.taskSummary || generateSummary(data.response || '');
+    // Use the summary from the marker
+    const baseSummary = markerCheck.summary;
 
     // Prepend session name if detected
     const summary = sessionName
@@ -473,11 +529,51 @@ process.stdin.on('end', async () => {
     }
 
     // Get the appropriate voice for this session
-    const voiceId = getVoiceForSession(sessionName);
+    // Voice override takes precedence over session-based voice
+    let voiceId: string;
+    if (markerCheck.voiceOverride) {
+      // Check if it's a voice name or direct ID
+      // Try exact match first (Title Case)
+      if (CONFIG.voiceNameMap[markerCheck.voiceOverride]) {
+        voiceId = CONFIG.voiceNameMap[markerCheck.voiceOverride];
+        console.log(`🎤 Using user-specified voice by name: ${markerCheck.voiceOverride} (${voiceId})`);
+      } else {
+        // Try case-insensitive match
+        const matchedKey = Object.keys(CONFIG.voiceNameMap).find(
+          key => key.toLowerCase() === markerCheck.voiceOverride!.toLowerCase()
+        );
+        if (matchedKey) {
+          voiceId = CONFIG.voiceNameMap[matchedKey];
+          console.log(`🎤 Using user-specified voice by name: ${matchedKey} (${voiceId})`);
+        } else if (markerCheck.voiceOverride.match(/^[a-zA-Z0-9]{15,30}$/)) {
+          // Looks like a direct voice ID
+          voiceId = markerCheck.voiceOverride;
+          console.log(`🎤 Using user-specified voice by ID: ${voiceId}`);
+        } else {
+          console.log(`⚠️ Unknown voice "${markerCheck.voiceOverride}", falling back to session voice`);
+          voiceId = getVoiceForSession(sessionName);
+        }
+      }
+    } else {
+      voiceId = getVoiceForSession(sessionName);
+    }
 
-    // Generate unique filename for this audio
+    // Generate unique filename for this audio based on summary
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const audioPath = join(audioDir, `summary-${timestamp}.mp3`);
+
+    // Convert summary to snake_case filename (max 10 words)
+    const summaryWords = baseSummary
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '') // Remove special characters
+      .split(/\s+/) // Split by whitespace
+      .filter(word => word.length > 0) // Remove empty strings
+      .slice(0, 10); // Take first 10 words
+
+    const filename = summaryWords.length > 0
+      ? `${summaryWords.join('_')}-${timestamp}.mp3`
+      : `summary-${timestamp}.mp3`;
+
+    const audioPath = join(audioDir, filename);
 
     // Generate speech using ElevenLabs with session-specific voice
     const speechGenerated = await generateSpeechWithElevenLabs(summary, audioPath, voiceId);
