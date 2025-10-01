@@ -13,20 +13,20 @@ When responding to user requests, you must include special markers for voice fee
 
 ### Initial Acknowledgement
 - After receiving a user command, provide your normal acknowledgement response
-- At the END of your first response, add: `<!-- ACKNOWLEDGE: brief summary -->`
+- At the VERY END of your first response (last line), add: `ACKNOWLEDGE: brief summary`
 - The summary should be 1-2 sentences describing what you're about to do
-- Example: `<!-- ACKNOWLEDGE: Fixing authentication bug and running tests -->`
+- Example: `ACKNOWLEDGE: Fixing authentication bug and running tests`
 
 ### Task Completion
-- When you have FULLY completed the entire task, add at the END of your final response: `<!-- TASK_COMPLETE: brief summary -->`
+- When you have FULLY completed the entire task, add at the VERY END of your final response (last line): `TASK_COMPLETE: brief summary`
 - The summary should be 1-2 sentences describing what was accomplished
-- Example: `<!-- TASK_COMPLETE: Fixed authentication bug, all 23 tests passing -->`
+- Example: `TASK_COMPLETE: Fixed authentication bug, all 23 tests passing`
 - Only use this marker when the ENTIRE task is done, not for intermediate steps
 
 ### User-Specified Voice Override (Optional)
 - If the user specifies a voice in their request, add the voice NAME after the summary
-- Format: `<!-- ACKNOWLEDGE: summary [VOICE: VoiceName] -->`
-- Example: `<!-- ACKNOWLEDGE: Fixing bug [VOICE: Sarah] -->`
+- Format: `ACKNOWLEDGE: summary [VOICE: VoiceName]`
+- Example: `ACKNOWLEDGE: Fixing bug [VOICE: Aria]`
 - The voice override applies to both acknowledgement AND completion for that task
 - If no voice is specified, the system uses session-based voice mapping
 
@@ -57,11 +57,11 @@ Look for these patterns in user messages:
 When you detect a voice request, use that voice name in BOTH the acknowledgement and completion markers.
 
 ### Important Rules
-1. These markers are HTML comments and will not be visible to the user
+1. These markers are plain text on their own line at the very end of your response
 2. Continue providing your normal detailed text responses - these markers are IN ADDITION to your normal output
 3. Do NOT use these markers for intermediate work-in-progress responses
 4. The summary after each marker should be concise (max 150 characters) and suitable for text-to-speech
-5. Always place markers at the END of your response text
+5. Always place markers as the LAST LINE of your response text
 6. Continue using all your normal tools and providing detailed explanations as usual
 7. Voice names are case-insensitive but prefer the exact names listed above
 8. You can also use direct voice IDs if the user provides them
@@ -72,19 +72,25 @@ When you detect a voice request, use that voice name in BOTH the acknowledgement
 
 **Your first response**:
 ```
-I'll fix the authentication bug and run tests for you. Let me start by examining the authentication code.<!-- ACKNOWLEDGE: Fixing authentication bug and running tests -->
+I'll fix the authentication bug and run tests for you. Let me start by examining the authentication code.
+
+ACKNOWLEDGE: Fixing authentication bug and running tests
 ```
 
 **User asks with voice**: "Fix the bug using Aria voice"
 
 **Your first response**:
 ```
-I'll fix the bug and run tests for you.<!-- ACKNOWLEDGE: Fixing bug and running tests [VOICE: Aria] -->
+I'll fix the bug and run tests for you.
+
+ACKNOWLEDGE: Fixing bug and running tests [VOICE: Aria]
 ```
 
 **Your final response** (remember to use same voice):
 ```
-Fixed the authentication bug in src/auth.ts:45 by adding token expiry validation. All 23 tests pass successfully.<!-- TASK_COMPLETE: Fixed authentication bug, all tests passing [VOICE: Aria] -->
+Fixed the authentication bug in src/auth.ts:45 by adding token expiry validation. All 23 tests pass successfully.
+
+TASK_COMPLETE: Fixed authentication bug, all tests passing [VOICE: Aria]
 ```
 
 **Your intermediate responses** (no markers):

@@ -260,8 +260,8 @@ function getVoiceForSession(sessionName: string): string {
 
 // Function to check if response contains voice markers and extract summary
 function checkForVoiceMarker(response: string): { shouldSpeak: boolean; summary: string; voiceOverride?: string } {
-  // Check for TASK_COMPLETE marker with optional voice
-  const completeMatch = response.match(/<!--\s*TASK_COMPLETE:\s*(.+?)(?:\s*\[VOICE:\s*(.+?)\])?\s*-->/);
+  // Check for TASK_COMPLETE marker with optional voice (both HTML and plain text formats)
+  const completeMatch = response.match(/(?:<!--\s*)?TASK_COMPLETE:\s*(.+?)(?:\s*\[VOICE:\s*(.+?)\])?(?:\s*-->)?$/m);
   if (completeMatch) {
     const summary = completeMatch[1].trim();
     const voiceOverride = completeMatch[2]?.trim();
@@ -269,8 +269,8 @@ function checkForVoiceMarker(response: string): { shouldSpeak: boolean; summary:
     return { shouldSpeak: true, summary, voiceOverride };
   }
 
-  // Check for ACKNOWLEDGE marker with optional voice
-  const ackMatch = response.match(/<!--\s*ACKNOWLEDGE:\s*(.+?)(?:\s*\[VOICE:\s*(.+?)\])?\s*-->/);
+  // Check for ACKNOWLEDGE marker with optional voice (both HTML and plain text formats)
+  const ackMatch = response.match(/(?:<!--\s*)?ACKNOWLEDGE:\s*(.+?)(?:\s*\[VOICE:\s*(.+?)\])?(?:\s*-->)?$/m);
   if (ackMatch) {
     const summary = ackMatch[1].trim();
     const voiceOverride = ackMatch[2]?.trim();
