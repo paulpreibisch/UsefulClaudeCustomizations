@@ -129,7 +129,7 @@ if [ -f "$SETTINGS_FILE" ]; then
 fi
 
 # Ask for confirmation
-read -p "Do you want to proceed with ${INSTALL_TYPE} installation? (y/n) " -n 1 -r
+read -p "Do you want to proceed with installation? (y/n) " -n 1 -r
 echo ""
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo "Installation cancelled."
@@ -298,5 +298,5 @@ echo "• Wrong voice? Update voiceId in stop-elevenlabs.ts"
 echo "• Settings issues? Restore from: ${SETTINGS_FILE}.backup"
 echo ""
 
-echo "Documentation: https://github.com/PaulKinlan/UsefulClaudeCustomizations"
+echo "Documentation: https://github.com/paulpreibisch/UsefulClaudeCustomizations"
 echo ""

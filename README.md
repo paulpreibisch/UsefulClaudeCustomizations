@@ -41,7 +41,7 @@ The installer provides detailed explanations for each step and supports both glo
 3. **Run the Installer**
    ```bash
    # Clone the repo
-   git clone https://github.com/PaulKinlan/UsefulClaudeCustomizations.git
+   git clone https://github.com/paulpreibisch/UsefulClaudeCustomizations.git
    cd UsefulClaudeCustomizations
 
    # Run the install script
